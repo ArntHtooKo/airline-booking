@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { AirplaneIcon, CheckIcon, CloseIcon } from "@/components/Icons";
+import { AirplaneIcon, CheckIcon } from "@/components/Icons";
 
 interface BookingConfirmationProps {
   isOpen: boolean;
@@ -48,9 +48,8 @@ export default function BookingConfirmation({ isOpen, onClose, bookingRef, fligh
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 px-5 py-4 text-center">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 px-5 py-4 text-center rounded-t-2xl">
           <CheckIcon className="w-12 h-12 text-white mx-auto mb-2" />
           <h2 className="text-xl font-bold text-white">Booking Confirmed!</h2>
           <p className="text-green-100 text-sm">Your journey is booked</p>
@@ -98,6 +97,21 @@ export default function BookingConfirmation({ isOpen, onClose, bookingRef, fligh
               <div className="flex justify-between pt-2 border-t border-blue-200">
                 <span className="text-gray-600 font-medium">Total</span>
                 <span className="text-xl font-bold text-blue-600">${flight.price}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Passenger Details */}
+          <div className="bg-gray-50 rounded-xl p-4 mb-5">
+            <h3 className="font-bold text-gray-800 text-sm mb-2">Passenger Details</h3>
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Name</span>
+                <span className="font-semibold text-gray-800">{passenger.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Email</span>
+                <span className="font-semibold text-gray-800">{passenger.email}</span>
               </div>
             </div>
           </div>

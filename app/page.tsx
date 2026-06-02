@@ -148,10 +148,18 @@ export default function Home() {
     setShowModal(true);
   };
 
-  const handleBookingComplete = (bookingRef: string) => {
-    setBookingResult({ bookingRef });
+  const handleBookingComplete = (bookingRef: string, passengerName: string, passengerEmail: string) => {
+    setBookingResult({ 
+      bookingRef, 
+      passengerName, 
+      passengerEmail,
+      seatNumber: 1 
+    });
     setShowConfirmation(true);
-    searchFlights(new Event("submit") as any);
+    // Refresh flights to update available seats
+    setTimeout(() => {
+      searchFlights(new Event("submit") as any);
+    }, 500);
   };
 
   const handleCancelBooking = async (e: React.FormEvent) => {
@@ -410,8 +418,32 @@ export default function Home() {
 
       <footer className="bg-gray-900 text-white py-8"><div className="container mx-auto px-6 text-center text-gray-500 text-sm">© 2026 Dairy Flat Airlines. All rights reserved.</div></footer>
 
-      {selectedFlight && <BookingModal isOpen={showModal} onClose={() => { setShowModal(false); setSelectedFlight(null); }} flight={selectedFlight} onBookingComplete={handleBookingComplete} />}
-      {bookingResult && selectedFlight && <BookingConfirmation isOpen={showConfirmation} onClose={() => { setShowConfirmation(false); setBookingResult(null); setSelectedFlight(null); }} bookingRef={bookingResult.bookingRef} flight={{ flightNumber: selectedFlight.flightNumber, origin: selectedFlight.origin, destination: selectedFlight.destination, departureDateTime: selectedFlight.departureDateTime, arrivalDateTime: selectedFlight.arrivalDateTime, price: selectedFlight.price, seatNumber: 1 }} passenger={{ name: "", email: "" }} />}
+      {selectedFlight && (
+        <BookingModal 
+          isOpen={showModal} 
+          onClose={() => { setShowModal(false); setSelectedFlight(null); }} 
+          flight={selectedFlight} 
+          onBookingComplete={(bookingRef, passengerName, passengerEmail) => handleBookingComplete(bookingRef, passengerName, passengerEmail)} 
+        />
+      )}
+
+      {bookingResult && selectedFlight && (
+        <BookingConfirmation 
+          isOpen={showConfirmation} 
+          onClose={() => { setShowConfirmation(false); setBookingResult(null); setSelectedFlight(null); }} 
+          bookingRef={bookingResult.bookingRef} 
+          flight={{ 
+            flightNumber: selectedFlight.flightNumber, 
+            origin: selectedFlight.origin, 
+            destination: selectedFlight.destination, 
+            departureDateTime: selectedFlight.departureDateTime, 
+            arrivalDateTime: selectedFlight.arrivalDateTime, 
+            price: selectedFlight.price, 
+            seatNumber: bookingResult.seatNumber || 1 
+          }} 
+          passenger={{ name: bookingResult.passengerName || "", email: bookingResult.passengerEmail || "" }} 
+        />
+      )}
     </>
   );
 }

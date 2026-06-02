@@ -15,7 +15,7 @@ interface BookingModalProps {
     arrivalDateTime: string;
     price: number;
   };
-  onBookingComplete: (bookingRef: string) => void;
+  onBookingComplete: (bookingRef: string, passengerName: string, passengerEmail: string) => void;
 }
 
 export default function BookingModal({ isOpen, onClose, flight, onBookingComplete }: BookingModalProps) {
@@ -70,7 +70,7 @@ export default function BookingModal({ isOpen, onClose, flight, onBookingComplet
       const data = await response.json();
 
       if (response.ok) {
-        onBookingComplete(data.bookingReference);
+        onBookingComplete(data.bookingReference, name, email);
         onClose();
       } else {
         setError(data.error || "Booking failed");
@@ -85,7 +85,6 @@ export default function BookingModal({ isOpen, onClose, flight, onBookingComplet
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-4 sticky top-0">
           <div className="flex justify-between items-center">
             <div>
@@ -98,7 +97,6 @@ export default function BookingModal({ isOpen, onClose, flight, onBookingComplet
           </div>
         </div>
         
-        {/* Flight Summary */}
         <div className="p-5 border-b border-gray-100">
           <div className="bg-gray-50 rounded-xl p-3">
             <div className="flex items-center justify-between mb-2">
@@ -126,7 +124,6 @@ export default function BookingModal({ isOpen, onClose, flight, onBookingComplet
           </div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -135,12 +132,12 @@ export default function BookingModal({ isOpen, onClose, flight, onBookingComplet
               onChange={(e) => setTitle(e.target.value)}
               className="w-full border border-gray-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-800 text-sm"
             >
-              <option value="" className="text-gray-500">Select title</option>
-              <option value="Mr" className="text-gray-800">Mr</option>
-              <option value="Mrs" className="text-gray-800">Mrs</option>
-              <option value="Ms" className="text-gray-800">Ms</option>
-              <option value="Miss" className="text-gray-800">Miss</option>
-              <option value="Dr" className="text-gray-800">Dr</option>
+              <option value="">Select title</option>
+              <option value="Mr">Mr</option>
+              <option value="Mrs">Mrs</option>
+              <option value="Ms">Ms</option>
+              <option value="Miss">Miss</option>
+              <option value="Dr">Dr</option>
             </select>
           </div>
 
@@ -166,9 +163,9 @@ export default function BookingModal({ isOpen, onClose, flight, onBookingComplet
               onChange={(e) => setGender(e.target.value)}
               className="w-full border border-gray-300 rounded-xl p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-800 text-sm"
             >
-              <option value="" className="text-gray-500">Select gender</option>
-              <option value="m" className="text-gray-800">Male</option>
-              <option value="f" className="text-gray-800">Female</option>
+              <option value="">Select gender</option>
+              <option value="m">Male</option>
+              <option value="f">Female</option>
             </select>
           </div>
 
