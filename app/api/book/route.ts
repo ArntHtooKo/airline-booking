@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     const bookingReference = generateBookingReference();
+    const seatNumber = currentBookings.length + 1;
 
     const newBooking = {
       bookingReference: bookingReference,
@@ -58,26 +59,26 @@ export async function POST(request: NextRequest) {
       passengerTitle: passengerTitle || "",
       passengerGender: passengerGender || "",
       bookingDate: new Date(),
-      seatNumber: currentBookings.length + 1
+      seatNumber: seatNumber
     };
 
-    // Fix: Use proper update syntax
     await db.collection("schedules").updateOne(
       { _id: new ObjectId(flightId) },
       { $push: { bookings: newBooking } as any }
     );
 
+    // Return complete booking data for confirmation
     return NextResponse.json({
       success: true,
       bookingReference: bookingReference,
+      seatNumber: seatNumber,
       flight: {
         flightNumber: flight.flightNumber,
         origin: flight.origin,
         destination: flight.destination,
         departureDateTime: flight.departureDateTime,
         arrivalDateTime: flight.arrivalDateTime,
-        price: flight.price,
-        seatNumber: newBooking.seatNumber
+        price: flight.price
       },
       passenger: {
         name: passengerName,

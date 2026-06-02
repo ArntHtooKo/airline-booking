@@ -54,7 +54,7 @@ export default function Home() {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [bookingResult, setBookingResult] = useState<any>(null);
+  const [bookingData, setBookingData] = useState<any>(null);
   const [scrolled, setScrolled] = useState(false);
   
   const [cancelRef, setCancelRef] = useState("");
@@ -148,13 +148,8 @@ export default function Home() {
     setShowModal(true);
   };
 
-  const handleBookingComplete = (bookingRef: string, passengerName: string, passengerEmail: string) => {
-    setBookingResult({ 
-      bookingRef, 
-      passengerName, 
-      passengerEmail,
-      seatNumber: 1 
-    });
+  const handleBookingComplete = (bookingData: any) => {
+    setBookingData(bookingData);
     setShowConfirmation(true);
     // Refresh flights to update available seats
     setTimeout(() => {
@@ -423,25 +418,25 @@ export default function Home() {
           isOpen={showModal} 
           onClose={() => { setShowModal(false); setSelectedFlight(null); }} 
           flight={selectedFlight} 
-          onBookingComplete={(bookingRef, passengerName, passengerEmail) => handleBookingComplete(bookingRef, passengerName, passengerEmail)} 
+          onBookingComplete={handleBookingComplete} 
         />
       )}
 
-      {bookingResult && selectedFlight && (
+      {bookingData && (
         <BookingConfirmation 
           isOpen={showConfirmation} 
-          onClose={() => { setShowConfirmation(false); setBookingResult(null); setSelectedFlight(null); }} 
-          bookingRef={bookingResult.bookingRef} 
+          onClose={() => { setShowConfirmation(false); setBookingData(null); setSelectedFlight(null); }} 
+          bookingRef={bookingData.bookingReference} 
           flight={{ 
-            flightNumber: selectedFlight.flightNumber, 
-            origin: selectedFlight.origin, 
-            destination: selectedFlight.destination, 
-            departureDateTime: selectedFlight.departureDateTime, 
-            arrivalDateTime: selectedFlight.arrivalDateTime, 
-            price: selectedFlight.price, 
-            seatNumber: bookingResult.seatNumber || 1 
+            flightNumber: bookingData.flight.flightNumber, 
+            origin: bookingData.flight.origin, 
+            destination: bookingData.flight.destination, 
+            departureDateTime: bookingData.flight.departureDateTime, 
+            arrivalDateTime: bookingData.flight.arrivalDateTime, 
+            price: bookingData.flight.price, 
+            seatNumber: bookingData.seatNumber 
           }} 
-          passenger={{ name: bookingResult.passengerName || "", email: bookingResult.passengerEmail || "" }} 
+          passenger={{ name: bookingData.passenger.name, email: bookingData.passenger.email }} 
         />
       )}
     </>

@@ -15,7 +15,7 @@ interface BookingModalProps {
     arrivalDateTime: string;
     price: number;
   };
-  onBookingComplete: (bookingRef: string, passengerName: string, passengerEmail: string) => void;
+  onBookingComplete: (bookingData: any) => void;
 }
 
 export default function BookingModal({ isOpen, onClose, flight, onBookingComplete }: BookingModalProps) {
@@ -70,8 +70,19 @@ export default function BookingModal({ isOpen, onClose, flight, onBookingComplet
       const data = await response.json();
 
       if (response.ok) {
-        onBookingComplete(data.bookingReference, name, email);
+        // Pass the complete booking data to parent
+        onBookingComplete({
+          bookingReference: data.bookingReference,
+          seatNumber: data.seatNumber,
+          flight: data.flight,
+          passenger: data.passenger
+        });
         onClose();
+        // Reset form
+        setName("");
+        setEmail("");
+        setTitle("");
+        setGender("");
       } else {
         setError(data.error || "Booking failed");
       }
