@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
     const client = await clientPromise;
     const db = client.db();
 
-    // Find the schedule containing this booking
     const schedule = await db.collection("schedules").findOne({
       "bookings.bookingReference": bookingReference
     });
@@ -29,7 +28,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find the specific booking
     const booking = schedule.bookings.find(
       (b: any) => b.bookingReference === bookingReference
     );
@@ -41,7 +39,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify email matches
     if (booking.passengerEmail !== email) {
       return NextResponse.json(
         { error: "Email does not match the booking" },
@@ -49,10 +46,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Remove the booking from the array
     await db.collection("schedules").updateOne(
       { _id: schedule._id },
-      { $pull: { bookings: { bookingReference: bookingReference } } }
+      { $pull: { bookings: { bookingReference: bookingReference } } as any }
     );
 
     return NextResponse.json({

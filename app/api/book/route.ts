@@ -61,9 +61,10 @@ export async function POST(request: NextRequest) {
       seatNumber: currentBookings.length + 1
     };
 
+    // Fix: Use proper update syntax
     await db.collection("schedules").updateOne(
       { _id: new ObjectId(flightId) },
-      { $push: { bookings: newBooking } }
+      { $push: { bookings: newBooking } as any }
     );
 
     return NextResponse.json({
